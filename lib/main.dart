@@ -1,9 +1,27 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'home_screen.dart'; // Import HomeScreen
-import 'produk_screen.dart'; // Import ProdukScreen
-import 'transaksi_screen.dart'; // Import TransaksiScreen
+import 'Screen/home_screen.dart'; // Import HomeScreen
+import 'Screen/Produk/produk_screen.dart'; // Import ProdukScreen
+import 'Screen/Transaksi/transaksi_screen.dart'; // Import TransaksiScreen
 
-void main() {
+void main() async{
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if(kIsWeb){
+    await Firebase.initializeApp(
+        options: FirebaseOptions(
+        apiKey: "AIzaSyBWqpZCcT-OO4WS8Ok_qYtV6XgtkBjZOeQ",
+        authDomain: "fire-setup-eeef6.firebaseapp.com",
+        projectId: "fire-setup-eeef6",
+        storageBucket: "fire-setup-eeef6.appspot.com",
+        messagingSenderId: "134802871590",
+        appId: "1:134802871590:web:4fcb5f28790483fbc6dde7"));
+  }else{
+    await Firebase.initializeApp();
+  }
+
   runApp(MyApp());
 }
 

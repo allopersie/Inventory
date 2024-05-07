@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "134802871590",
+    "project_id": "fire-setup-eeef6",
+    "storage_bucket": "fire-setup-eeef6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:134802871590:android:882c88a8398629f7c6dde7",
+        "android_client_info": {
+          "package_name": "com.example.inventory"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOgZxxahqW-tIJa_ryRlS85pdxJi_9sys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

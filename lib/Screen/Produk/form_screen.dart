@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class OrderScreen extends StatefulWidget {
+class FormScreen extends StatefulWidget {
   @override
-  _OrderScreenState createState() => _OrderScreenState();
+  _FormScreenState createState() => _FormScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _FormScreenState extends State<FormScreen> {
   String _selectedSize = 'S';
   String _selectedColor = '';
   String? _selectedMaterial;
@@ -32,7 +32,7 @@ class _OrderScreenState extends State<OrderScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Form'), // Ganti judul AppBar
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
         child: Padding(
