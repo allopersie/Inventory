@@ -1,10 +1,11 @@
 buildscript {
+    ext.kotlin_version = '1.8.0-Beta'
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.google.gms.google-services:4.4.1'
+        classpath 'com.google.gms:google-services:4.4.1'
     }
 }
 

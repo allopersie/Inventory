@@ -34,10 +34,10 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat',
         primaryColor: Color(0xFF11144c),
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          background: Color(0xFFF8F9FA), // Ubah warna latar belakang
+          surface: Color(0xFFF8F9FA), // Menggunakan surface sebagai pengganti background
         ),
         appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xFFF8F9FA), // Ubah warna latar belakang AppBar
+          backgroundColor: Color(0xFFF8F9FA), // Menggunakan surface sebagai pengganti background AppBar
           titleTextStyle: TextStyle(
             color: Colors.black87,
             fontWeight: FontWeight.w100,
