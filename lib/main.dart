@@ -1,24 +1,24 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'Screen/home_screen.dart'; // Import HomeScreen
-import 'Screen/Produk/produk_screen.dart'; // Import ProdukScreen
-import 'Screen/Transaksi/transaksi_screen.dart'; // Import TransaksiScreen
+import 'LoginScreen.dart';
+import 'home_screen.dart';
+import 'Admin/Produk/produk_screen.dart';
+import 'Admin/Transaksi/transaksi_screen.dart';
 
-void main() async{
-
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if(kIsWeb){
+  if (kIsWeb) {
     await Firebase.initializeApp(
         options: FirebaseOptions(
-        apiKey: "AIzaSyBWqpZCcT-OO4WS8Ok_qYtV6XgtkBjZOeQ",
-        authDomain: "fire-setup-eeef6.firebaseapp.com",
-        projectId: "fire-setup-eeef6",
-        storageBucket: "fire-setup-eeef6.appspot.com",
-        messagingSenderId: "134802871590",
-        appId: "1:134802871590:web:4fcb5f28790483fbc6dde7"));
-  }else{
+            apiKey: "AIzaSyBWqpZCcT-OO4WS8Ok_qYtV6XgtkBjZOeQ",
+            authDomain: "fire-setup-eeef6.firebaseapp.com",
+            projectId: "fire-setup-eeef6",
+            storageBucket: "fire-setup-eeef6.appspot.com",
+            messagingSenderId: "134802871590",
+            appId: "1:134802871590:web:4fcb5f28790483fbc6dde7"));
+  } else {
     await Firebase.initializeApp();
   }
 
@@ -32,12 +32,12 @@ class MyApp extends StatelessWidget {
       title: 'Inventory',
       theme: ThemeData(
         fontFamily: 'Montserrat',
-        primaryColor: Color(0xFF11144c),
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          surface: Color(0xFFF8F9FA), // Menggunakan surface sebagai pengganti background
-        ),
+        primaryColor: Colors.white,
+        //colorScheme: ColorScheme.fromSwatch().copyWith(
+          //surface: Colors.white, // Menggunakan surface sebagai pengganti background
+        //),
         appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xFFF8F9FA), // Menggunakan surface sebagai pengganti background AppBar
+          backgroundColor: Colors.white, // Menggunakan surface sebagai pengganti background AppBar
           titleTextStyle: TextStyle(
             color: Colors.black87,
             fontWeight: FontWeight.w100,
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: MyHomePage(),
+      home: LoginScreen(), // Tampilkan LoginScreen sebagai layar awal
     );
   }
 }
