@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class ProdukScreen extends StatefulWidget {
+class ProdukScreenGudang extends StatefulWidget {
   @override
-  _ProdukScreenState createState() => _ProdukScreenState();
+  _ProdukScreenGudangState createState() => _ProdukScreenGudangState();
 }
 
-class _ProdukScreenState extends State<ProdukScreen> {
+class _ProdukScreenGudangState extends State<ProdukScreenGudang> {
   List<String> _ProdukList = []; // Menyimpan data yang dimasukkan dari FormScreen
 
   @override

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class TransaksiScreen extends StatefulWidget {
+class TransaksiScreenStoker extends StatefulWidget {
   @override
-  _TransaksiScreenState createState() => _TransaksiScreenState();
+  _TransaksiScreenStokerState createState() => _TransaksiScreenStokerState();
 }
 
-class _TransaksiScreenState extends State<TransaksiScreen> {
+class _TransaksiScreenStokerState extends State<TransaksiScreenStoker> {
   List<String> _OrderList = []; // Menyimpan data yang dimasukkan dari FormScreen
 
   @override
