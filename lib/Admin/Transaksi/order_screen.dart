@@ -1,4 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import '../../App_Constant/AppConstant.dart';
+import '../../Model/User_Model.dart';
 
 class OrderScreen extends StatefulWidget {
   @override
@@ -6,9 +14,110 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  String _selectedSize = 'S';
+  Future<List<ProdukModel>> getProdukApi() async{
+    try {
+      final response = await http.get(Uri.parse(AppConstant.BASE_URL + AppConstant.PRODUK)) ;
+      //final body = json.decode(response.body) as List;
+      print(response.body);
+      if(response.statusCode == 200) {
+        List data = jsonDecode(response.body);
+        return ProdukModel.listFromJson(data);
+      }
+    } on SocketException {
+      await Future.delayed(const Duration(milliseconds: 1800));
+      throw Exception('No Internet Connection');
+    } on TimeoutException {
+      throw Exception('');
+    }
+    throw Exception('error fetching data');
+  }
+
+  Future<List<BahanModel>> getBahanApi() async{
+    try {
+      final response = await http.get(Uri.parse(AppConstant.BASE_URL + AppConstant.BAHAN)) ;
+      //final body = json.decode(response.body) as List;
+      print(response.body);
+      if(response.statusCode == 200) {
+        List data = jsonDecode(response.body);
+        return BahanModel.listFromJson(data);
+      }
+    } on SocketException {
+      await Future.delayed(const Duration(milliseconds: 1800));
+      throw Exception('No Internet Connection');
+    } on TimeoutException {
+      throw Exception('');
+    }
+    throw Exception('error fetching data');
+  }
+
+  Future<List<UkuranModel>> getUkuranApi ()async{
+
+    try {
+      final response = await http.get(Uri.parse(AppConstant.BASE_URL + AppConstant.UKURAN)) ;
+      final body = json.decode(response.body) as List;
+      if(response.statusCode == 200) {
+        print(response.body);
+        if(response.statusCode == 200) {
+          List data = jsonDecode(response.body);
+          return UkuranModel.listFromJson(data);
+        }
+      }
+    } on SocketException {
+      await Future.delayed(const Duration(milliseconds: 1800));
+      throw Exception('No Internet Connection');
+    } on TimeoutException {
+      throw Exception('');
+    }
+    throw Exception('error fetching data');
+  }
+  void postToPesanan() async{
+    PesananModel model = PesananModel(ID: "",Tanggal: selectedDate.toString(),
+        Warna: _selectedColor, Jenis_Bahan_ID: int.parse(_selectedMaterial!),
+        Ukuran_ID: int.parse(_selectedSize!), Quantity: int.parse(_quantityController.text),
+        Created: DateTime.now().toString(), Createdby: "Admin",Id_Produk: _selectProduk!
+    );
+    try{
+      final response = await sendPostRequest(model);
+
+    }catch(e){
+      throw Exception('No Internet Connection');
+    }
+
+
+  }
+  Future<void> sendPostRequest(PesananModel PesananPost) async {
+    // Convert the body to a JSON string
+    try {
+      print(jsonEncode(PesananPost.toJson()));
+      final jsonEncode2 = jsonEncode(PesananPost.toJson());
+      final jsonBody = jsonEncode(PesananPost.toJson());
+      // Set the headers for the request
+      Map<String, String> headers = {
+        'Content-Type': 'application/json'
+      };
+      final url =  Uri.parse(AppConstant.BASE_URL + AppConstant.Post_Pesanan);
+      // Send the POST request
+      final response = await http.post(url, headers: headers, body: jsonBody);
+
+      // Check the status code of the response
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // The request was successful
+        print('Request successful!');
+        print('Response body: ${response.body}');
+      } else {
+        // The request failed
+        print('Request failed with status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      // There was an error making the request
+      print('Error: $e');
+    }
+  }
+  String? _selectedSize;
   String _selectedColor = '';
   String? _selectedMaterial;
+  String? _selectProduk;
   DateTime selectedDate = DateTime.now();
 
   TextEditingController _quantityController = TextEditingController();
@@ -31,7 +140,11 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Form'), // Ganti judul AppBar
+        title: Text(
+          'Form Transaksi',
+          style: TextStyle(fontWeight: FontWeight.bold
+          ),
+        ), // Ganti judul AppBar
         iconTheme: IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
@@ -68,9 +181,47 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
               SizedBox(height: 16.0),
               Text(
+                'Pilih Produk:',
+                style: TextStyle(fontSize: 18.0),
+              ),
+              SizedBox(height: 8.0),
+              FutureBuilder<List<ProdukModel>>(
+                future: getProdukApi(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return DropdownButton(
+                      // Initial Value
+                      value: _selectProduk,
+                      hint: Text('Select value'),
+                      isExpanded: true,
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+
+                      // Array list of items
+                      items: snapshot.data!.map((item) {
+                        return DropdownMenuItem(
+                          value: item.ID,
+                          child: Text(item.Jenis_Bahan_ID.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        _selectProduk = value! ;
+                        setState(() {
+
+                        });
+                      },
+
+                    );
+                  } else {
+                    return Center(child: const CircularProgressIndicator());
+                  }
+                },
+              ),
+              Text(
                 'Pilih Warna:',
                 style: TextStyle(fontSize: 18.0),
               ),
+
               SizedBox(height: 8.0),
               Row(
                 children: [
@@ -103,43 +254,37 @@ class _OrderScreenState extends State<OrderScreen> {
                 style: TextStyle(fontSize: 18.0),
               ),
               SizedBox(height: 8.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RadioListTile(
-                    title: Text('20s'),
-                    value: '20s',
-                    groupValue: _selectedMaterial,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedMaterial = value;
-                      });
-                    },
-                    activeColor: Color(0xFF387B9A),
-                  ),
-                  RadioListTile(
-                    title: Text('24s'),
-                    value: '24s',
-                    groupValue: _selectedMaterial,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedMaterial = value;
-                      });
-                    },
-                    activeColor: Color(0xFF387B9A),
-                  ),
-                  RadioListTile(
-                    title: Text('30s'),
-                    value: '30s',
-                    groupValue: _selectedMaterial,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedMaterial = value;
-                      });
-                    },
-                    activeColor: Color(0xFF387B9A),
-                  ),
-                ],
+              FutureBuilder<List<BahanModel>>(
+                future: getBahanApi(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return DropdownButton(
+                      // Initial Value
+                      value: _selectedMaterial,
+                      hint: Text('Select value'),
+                      isExpanded: true,
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+
+                      // Array list of items
+                      items: snapshot.data!.map((item) {
+                        return DropdownMenuItem(
+                          value: item.ID,
+                          child: Text(item.Nama_Bahan.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        _selectedMaterial = value! ;
+                        setState(() {
+
+                        });
+                      },
+
+                    );
+                  } else {
+                    return Center(child: const CircularProgressIndicator());
+                  }
+                },
               ),
               SizedBox(height: 16.0),
               Text(
@@ -147,20 +292,37 @@ class _OrderScreenState extends State<OrderScreen> {
                 style: TextStyle(fontSize: 18.0),
               ),
               SizedBox(height: 8.0),
-              DropdownButton<String>(
-                value: _selectedSize,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedSize = newValue ?? 'S';
-                  });
+              FutureBuilder<List<UkuranModel>>(
+                future: getUkuranApi(),
+                builder: (context, snapshot2) {
+                  if (snapshot2.hasData) {
+                    return DropdownButton(
+                      // Initial Value
+                      value: _selectedSize,
+                      hint: Text('Select value'),
+                      isExpanded: true,
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+
+                      // Array list of items
+                      items: snapshot2.data!.map((item) {
+                        return DropdownMenuItem(
+                          value: item.ID,
+                          child: Text(item.Ukuran.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        _selectedSize = value!;
+                        setState(() {
+
+                        });
+                      },
+
+                    );
+                  } else {
+                    return Center(child: const CircularProgressIndicator());
+                  }
                 },
-                items: <String>['S', 'M', 'L', 'XL', 'XXL', '3XL']
-                    .map<DropdownMenuItem<String>>((value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
               ),
               SizedBox(height: 16.0),
               TextField(
@@ -175,6 +337,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    postToPesanan();
                     _saveData();
                   },
                   child: Text(
@@ -214,6 +377,7 @@ class _OrderScreenState extends State<OrderScreen> {
       _selectedMaterial = null;
       selectedDate = DateTime.now();
       _quantityController.clear();
+      _selectProduk='';
     });
   }
 }

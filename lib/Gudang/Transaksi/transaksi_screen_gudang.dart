@@ -4,20 +4,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:inventory/App_Constant/AppConstant.dart';
+import '../../Admin/Transaksi/order_screen.dart';
 import '../../Model/User_Model.dart';
-import 'order_screen.dart'; // import halaman formulir
 import 'package:http/http.dart' as http;
 
-class TransaksiScreen extends StatefulWidget {
-  final String role;
-  TransaksiScreen({required this.role});
+class TransaksiScreenGudang extends StatefulWidget {
   @override
   _TransaksiScreenState createState() => _TransaksiScreenState();
 }
 
-class _TransaksiScreenState extends State<TransaksiScreen> {
+class _TransaksiScreenState extends State<TransaksiScreenGudang> {
   List<String> _OrderList = []; // Menyimpan data yang dimasukkan dari FormScreen
-  Future<List<PesananModelVW>> getPesananVWApi() async{
+
+  Future<List<PesananModelVW>> getPesananApi() async{
 
     try {
       final response = await http.get(Uri.parse(AppConstant.BASE_URL + AppConstant.Post_Pesanan)) ;
@@ -47,7 +46,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   @override
   void initState(){
     super.initState();
-    getPesananVWApi();
+     getPesananApi();
   }
 
   @override
@@ -65,28 +64,9 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
           ),
         ) ,/// Ubah judul AppBar
         actions: [
-          IconButton(
-            onPressed: () async {
-              // Navigasi ke halaman formulir dan tunggu data yang dikirim kembali
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => OrderScreen()),
-              );
-
-              // Periksa apakah ada data yang dikirim kembali
-              if (result != null) {
-                setState(() {
-                  // Tambahkan data yang dikirim kembali ke dalam daftar
-                  _OrderList.add(result);
-                });
-              }
-            },
-            icon: Icon(Icons.add),
-            color: Colors.black,
-          ),
         ],
       ),body: FutureBuilder<List<PesananModelVW>>(
-        future: getPesananVWApi(),
+        future: getPesananApi(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

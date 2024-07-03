@@ -3,35 +3,36 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:inventory/App_Constant/AppConstant.dart';
+import '../../Admin/Produk/form_screen.dart';
+import '../../App_Constant/AppConstant.dart';
 import '../../Model/User_Model.dart';
-import 'order_screen.dart'; // import halaman formulir
 import 'package:http/http.dart' as http;
 
-class TransaksiScreen extends StatefulWidget {
-  final String role;
-  TransaksiScreen({required this.role});
+class ProdukScreenStoker extends StatefulWidget {
+
   @override
-  _TransaksiScreenState createState() => _TransaksiScreenState();
+  _ProdukScreenState createState() => _ProdukScreenState();
 }
 
-class _TransaksiScreenState extends State<TransaksiScreen> {
-  List<String> _OrderList = []; // Menyimpan data yang dimasukkan dari FormScreen
-  Future<List<PesananModelVW>> getPesananVWApi() async{
+class _ProdukScreenState extends State<ProdukScreenStoker> {
+  List<String> _ProdukList = []; // Menyimpan data yang dimasukkan dari FormScreen
+
+
+  Future<List<ProdukModelVW>> getPesananApi() async{
 
     try {
-      final response = await http.get(Uri.parse(AppConstant.BASE_URL + AppConstant.Post_Pesanan)) ;
+      final response = await http.get(Uri.parse(AppConstant.BASE_URL + AppConstant.ProdukView)) ;
       //final body = json.decode(response.body) as List;
       print(response.body);
       if(response.statusCode == 200) {
         List data = jsonDecode(response.body);
-        return PesananModelVW.listFromJson(data);
+        return ProdukModelVW.listFromJson(data);
         //setState(() {
-          //for(Map<String,dynamic> i in data){
-            //pesanans.add(PesananModel.fromJson(i));
-          //}
+        //for(Map<String,dynamic> i in data){
+        //pesanans.add(PesananModel.fromJson(i));
+        //}
 
-          // bahans = data.map((String,dynamic) => BahanModel.fromJson(dynamic))
+        // bahans = data.map((String,dynamic) => BahanModel.fromJson(dynamic))
         //});
 
       }
@@ -47,9 +48,8 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   @override
   void initState(){
     super.initState();
-    getPesananVWApi();
+    getPesananApi();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,27 +57,27 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
         title:
         AppBar(
           title: Text(
-            'Transaksi',
+            'Produk',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontFamily: 'Montserrat',
             ),
           ),
-        ) ,/// Ubah judul AppBar
+        ) ,// Ubah judul AppBar
         actions: [
           IconButton(
             onPressed: () async {
               // Navigasi ke halaman formulir dan tunggu data yang dikirim kembali
               final result = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => OrderScreen()),
+                MaterialPageRoute(builder: (context) => FormScreen()),
               );
 
               // Periksa apakah ada data yang dikirim kembali
               if (result != null) {
                 setState(() {
                   // Tambahkan data yang dikirim kembali ke dalam daftar
-                  _OrderList.add(result);
+                  _ProdukList.add(result);
                 });
               }
             },
@@ -85,15 +85,16 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
             color: Colors.black,
           ),
         ],
-      ),body: FutureBuilder<List<PesananModelVW>>(
-        future: getPesananVWApi(),
+      ),
+      body: FutureBuilder<List<ProdukModelVW>>(
+        future: getPesananApi(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No users found'));
+            return Center(child: Text('Tidak Ada Barang'));
           } else {
             return ListView.builder(
               itemCount: snapshot.data!.length,
@@ -116,8 +117,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
             );
           }
         },
-        ),
-
+      ),
 
     );
   }

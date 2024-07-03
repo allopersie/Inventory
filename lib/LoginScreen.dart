@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/main.dart';
 
+import 'Gudang/home_screen_gudang.dart';
+import 'Stoker/home_screen_stoker.dart';
+import 'home_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -10,6 +15,36 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String _username = '';
   String _password = '';
+  void login(BuildContext context) {
+
+
+    // Simulated authentication
+    if (_username == 'admin' && _password == 'admin') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage(role: 'admin')),
+      );
+    } else if (_username == 'gudang' && _password == 'gudang') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage(role: 'gudang')),
+      );
+    } else if (_username == 'stoker' && _password == 'stoker') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage(role: 'stoker')),
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: "Invalid username or password",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,16 +110,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
+                    onPressed: (){ if (_formKey.currentState?.validate() ?? false) {
+                      login(context);
+                    }},
+                    //onPressed: () {
+                     // if (_formKey.currentState?.validate() ?? false) {
                         // Lakukan aksi login di sini
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => MyHomePage()),
-                        );
-                      }
-                    },
-                    child: Text('Login'),
+                       // Navigator.pushReplacement(
+                        //  context,
+                         // MaterialPageRoute(builder: (context) => MyHomePage()),
+                        //);
+                      //}
+                    //},
+                    child: Text(
+                      'Login',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF387B9A),
+                    ),
                   ),
                 ],
               ),

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  final String role;
-
-  HomeScreen({required this.role});
-
+class HomeScreenGudang extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +14,7 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Selamat Datang, $role',
+                    "Selamat Datang, Gudang",
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -45,7 +41,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             Text(
-              "0",
+              "800",
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
@@ -138,7 +134,7 @@ class HomeScreen extends StatelessWidget {
                             SizedBox(height: 3),
                             FittedBox(
                               child: Text(
-                                "0",
+                                "1200",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -157,7 +153,6 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-
     );
   }
 }
